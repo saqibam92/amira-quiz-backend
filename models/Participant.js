@@ -17,6 +17,10 @@ const participantSchema = new mongoose.Schema(
       },
       unique: true,
     },
+    email: {
+      type: String,
+      required: true,
+    },
     answers: [
       {
         question: String,

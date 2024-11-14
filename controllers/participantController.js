@@ -2,16 +2,23 @@ const Participant = require("../models/Participant");
 
 // Save a new participant
 exports.saveParticipant = async (req, res) => {
-  const { name, mobile } = req.body;
+  const { name, mobile, email } = req.body;
 
   try {
     // Check if a participant with the same mobile number already exists
-    const existingParticipant = await Participant.findOne({ mobile });
+    // const existingParticipant = await Participant.findOne({ mobile});
+    // if (existingParticipant) {
+    //   return res.status(400).json({ message: "Mobile Number Already in use" });
+    // }
+
+    const existingParticipant = await Participant.findOne({ 
+      $or: [{ mobile }, { email }] 
+    });
     if (existingParticipant) {
-      return res.status(400).json({ message: "Mobile Number Already in use" });
+      return res.status(400).json({ message: "Mobile or Email already in use" });
     }
 
-    const newParticipant = new Participant({ name, mobile });
+    const newParticipant = new Participant({ name, mobile, email });
     await newParticipant.save();
     res.status(201).json({
       message: "Participant registered successfully!",
